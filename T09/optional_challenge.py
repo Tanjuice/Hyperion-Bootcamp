@@ -10,7 +10,7 @@ total_items = len(list) # This will include 'Items:'
 
 # For loops to print each item in list
 for item in list:
-    print(items) # Syntax: Incorrect name. # Runtime cannot print list item
+    print(items) # Syntax: Incorrect name. # Runtime: cannot print list item
     
 # Print amount of items in list
 print(total_items)
