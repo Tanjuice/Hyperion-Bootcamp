@@ -1,23 +1,25 @@
-# Declare variables
-# Convert variables to different type
-# Print All 
+# Python program to cast several variables to different types 
 
-# Variables
-num1 = 99.23
-num2 = 23
-num3 = 150
+# Variables to be altered
+num_float = 99.23
+num_int = 23
+num2_int = 150
 string1 = "100"
 
 # Convert inputs:
-num1 = int(num1)
-num2 = float(num2)
-num3 = str(num3)
+# Float to integer
+num_float = int(num_float)
+# Intager to float
+num_int = float(num_int)
+# INtager to string
+num3 = str(num2_int)
+# String to integer
 string1 = int(string1)
 
 # Print All
-print(num1)
-print(num2)
-print(num3)
+print(num_float)
+print(num_int)
+print(num2_int)
 print(string1)
 
 # Test

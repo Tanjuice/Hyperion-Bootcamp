@@ -14,5 +14,5 @@ elif time_total >= 106:
   print("Award: \nYou recieve the:\n Provincial Scroll!\n")
 elif time_total >= 101:
   print("Award: \nYou recieve the: \nProvincial Half Colours!\n")
-elif time_total <= 100:
+else: # Changed to else from elif based on feedback
   print("Award: \nYou will recieve the: \nProvincial Colours!!\n")

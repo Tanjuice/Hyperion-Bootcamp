@@ -31,7 +31,9 @@ if choice == "investment":
   elif interest == "compound":
     total = deposit * math.pow((1+rate2),years)
     print(f"\nThe total balance after {years} years is: £{total}\n")
-
+  # If neither option is entered
+  else:
+    print("Invalid input: Please type either \"simple\" or \"compound\"")
 
 # Bond Program
 elif choice == "bond":
@@ -51,7 +53,7 @@ elif choice == "bond":
   print(f"The monthly repayment is: £{repayment}\n")
 
 
-# Error if neither option
+# Error if neither option (Added based on feedback)
 else:
   print("Please enter a valid response")
 

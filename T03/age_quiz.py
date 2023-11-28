@@ -1,10 +1,10 @@
-
-
+# Welcome message
 print("Welcome to the age quiz!")
 
 # Take input and change to an int
 age = int(input("How old are you? "))
 
+# Based on input display message. Max age is set to 100
 if age > 100:
   print("Sorry you're dead.")
 elif age >= 65:
