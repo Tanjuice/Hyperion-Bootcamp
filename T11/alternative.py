@@ -6,31 +6,30 @@ output_string = ""
 # For loop for each letter in the length of the string 
 for letter in range(len(string)):
 # As iterations are numbered we can use them to alternate output
-# Prints odd numbers as lower case and even as upper and add them to our blank list including whitespace
-    if not letter % 2:
-        output_string = output_string + string[letter].upper()
+# Prints odd numbers as lower case and even as upper and add them to our blank string including whitespace
+    if letter % 2:
+        output_string += string[letter].upper()
     else:
-        output_string = output_string + string[letter].lower()
+        output_string += string[letter].lower()
 
 # Print final output
-print(f"\n{output_string}")
+print(f"\nAlternating Letters:\n{output_string}")
 
 
-# Starting with the same string it is split into a list by words and creates a new blank string
+# Starting with the same string it is split into a list by words then create a new blank string and list
 alternate_string = string.split()
-new_string = ""
-# Create counter to alternate over the list items
-counter = 0
+final_list = []
+final_string = ""
 
-# For loops itterating over each item in the list and increases the counter and uses similar logic to before
-for word in alternate_string:
-    counter += 1
-    if counter % 2:
-# Updates blank string with each word and includes a space while alternating upper and lower
-        new_string = new_string + (str(word).upper() + " ")
-        
+# Iterate over each item in the list and check if it is even or odd
+# Cast word as upper or lower depending on thr above and append to final list
+for word in range(len(alternate_string)):
+    if word % 2:
+        final_list.append(alternate_string[word].upper())
     else:
-        new_string = new_string + (str(word).lower() + " ")
+        final_list.append(alternate_string[word].lower())
 
-# Print final output
-print(f"\n{new_string}")
+# Join all words in the new list to create a new string seperated by a whitespace
+final_string = " ".join(final_list)
+# Print final result
+print(f"\nAlternating Words\n{final_string}")
