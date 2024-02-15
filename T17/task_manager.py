@@ -6,6 +6,7 @@
 # program will look in your root directory for the text files.
 
 #=====importing libraries===========
+import enum
 import os
 from datetime import datetime, date
 
@@ -23,11 +24,11 @@ with open("T17/tasks.txt", 'r') as task_file:
 
 
 task_list = []
-for t_str in task_data:
+for task_string in task_data:
     curr_t = {}
 
     # Split by semicolon and manually add each component
-    task_components = t_str.split(";")
+    task_components = task_string.split(";")
     curr_t['username'] = task_components[0]
     curr_t['title'] = task_components[1]
     curr_t['description'] = task_components[2]
@@ -185,22 +186,53 @@ def view_all():
             disp_str += f"Task Description: \n {t['description']}\n"
             print(disp_str)
 
-# View mine function
+# View mine function -----  VM
+
 def view_mine():
         '''Reads the task from task.txt file and prints to the console in the 
            format of Output 2 presented in the task pdf (i.e. includes spacing
            and labelling)
         '''
-        for t in task_list:
-            if t['username'] == curr_user:
-                disp_str = f"Task: \t\t {t['title']}\n"
-                disp_str += f"Assigned to: \t {t['username']}\n"
-                disp_str += f"Date Assigned: \t {t['assigned_date'].strftime(DATETIME_STRING_FORMAT)}\n"
-                disp_str += f"Due Date: \t {t['due_date'].strftime(DATETIME_STRING_FORMAT)}\n"
-                disp_str += f"Task Description: \n {t['description']}\n"
-                print(disp_str)
+
+        my_tasks = [task for task in task_list if task['username'] == curr_user]
+        if not my_tasks:
+            print("You dont have any tasks assigned.")
+            return
+        
+        for i, task in enumerate(my_tasks, start=1):
+            disp_str = f"{i}. Task: \t {task['title']}\n"
+            disp_str += f"Assigned to: \t {task['username']}\n"
+            disp_str += f"Date Assigned: \t {task['assigned_date'].strftime(DATETIME_STRING_FORMAT)}\n"
+            disp_str += f"Due Date: \t {task['due_date'].strftime(DATETIME_STRING_FORMAT)}\n"
+            disp_str += f"Task Description: \n--{task['description']}\n"
+            print(disp_str)
+
+        # Get users selection based on now enumerated list items
+        get_task_input(my_tasks)
 
 
+
+        
+# ----- USERS CHOICE -----
+        
+def get_task_input(my_tasks):
+    while True:
+        choice = input("Select a task number or -1 to go back: ")
+        if choice == "-1":
+            break
+        try:
+            choice = int(choice) - 1  # Convert to int and adjust for indexing
+            if 0 <= choice < len(my_tasks):
+                selected_task = my_tasks[choice]
+                print("Selected task:\n", selected_task['title'],"\n")
+                
+                # Logic for changing values or marking as complete
+
+                continue
+            else:
+                print("Invalid selection. Please try again.")
+        except ValueError:
+            print("Please enter a valid number or -1.")
 
 # presenting the menu to the user and 
 # making sure that the user input is converted to lower case.
@@ -222,8 +254,7 @@ while True:
 
     elif menu == 'vm':
         view_mine()
-                
-    
+        
     elif menu == 'ds' and curr_user == 'admin': 
         '''If the user is an admin they can display statistics about number of users
             and tasks.'''

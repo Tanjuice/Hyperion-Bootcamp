@@ -2,3 +2,5 @@ admin;Add functionality to task manager;Add additional options and refactor the 
 admin;testing;testicles;2024-02-11;2024-02-11;No
 admin;add user;sam;2024-02-11;2024-02-11;No
 Sam;Day off;free;2024-02-11;2024-02-11;No
+Sam;Finish Capstone;Finish T17 capstone (this module);2022-03-21;2024-02-12;No
+Sam;Learn python;Learn python in detail including list comps functions and classes;2024-05-19;2024-02-15;No
