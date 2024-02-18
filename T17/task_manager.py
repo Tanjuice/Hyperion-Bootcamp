@@ -28,7 +28,6 @@ def get_tasks():
 
     # Define task_list as an empty list
     task_list = []
-
     for task_string in task_data:
         curr_t = {}
         # Split by semicolon and manually add each component
@@ -39,9 +38,31 @@ def get_tasks():
         curr_t['due_date'] = datetime.strptime(task_components[3], DATETIME_STRING_FORMAT)
         curr_t['assigned_date'] = datetime.strptime(task_components[4], DATETIME_STRING_FORMAT)
         curr_t['completed'] = True if task_components[5] == "Yes" else False
-
         task_list.append(curr_t)
-    return task_list
+        
+        #incomplete_tasks(task_list)
+
+
+        
+    #     if curr_t['completed'] == False:
+    #         tasks_not_completed.append(curr_t)
+    #     else:
+    #         pass            
+
+    # print(task_list)
+    # print(tasks_not_completed)
+    return task_list#, tasks_not_completed
+
+# tasks_not_completed = []
+# def incomplete_tasks(t_list):
+#         for item in t_list:
+        
+#             if item['completed'] == False:
+#                 tasks_not_completed.append(item)
+#             else:
+#                 pass
+#         return tasks_not_completed
+
 
 #====Login Section====
 '''This code reads usernames and password from the user.txt file to 
@@ -198,6 +219,7 @@ def view_all():
             disp_str += f"Date Assigned: \t {t['assigned_date'].strftime(DATETIME_STRING_FORMAT)}\n"
             disp_str += f"Due Date: \t {t['due_date'].strftime(DATETIME_STRING_FORMAT)}\n"
             disp_str += f"Task Description: \n {t['description']}\n"
+            disp_str += f"Completed?: \t {t['completed']}\n"
             print(disp_str)
 
 #====View Mine function====
@@ -207,26 +229,29 @@ def view_all():
 def view_mine():
         # Create list of tasks with the same username that is logged in
         my_tasks = [task for task in task_list if task['username'] == curr_user]
-        if not my_tasks:
+        incomplete_tasks = [task for task in my_tasks if task['completed'] == False]
+        if not incomplete_tasks:
             print("You dont have any tasks assigned.")
             return
         
         # Enumerate list and print it
-        for i, task in enumerate(my_tasks, start=1):
-            disp_str = f"{i}. Task: \t {task['title']}\n"
-            disp_str += f"Assigned to: \t {task['username']}\n"
-            disp_str += f"Date Assigned: \t {task['assigned_date'].strftime(DATETIME_STRING_FORMAT)}\n"
-            disp_str += f"Due Date: \t {task['due_date'].strftime(DATETIME_STRING_FORMAT)}\n"
-            disp_str += f"Task Description: \n--{task['description']}\n"
-            print(disp_str)
+        for i, task in enumerate(incomplete_tasks, start=1):
+            
+                disp_str = f"{i}. Task: \t {task['title']}\n"
+                disp_str += f"Assigned to: \t {task['username']}\n"
+                disp_str += f"Date Assigned: \t {task['assigned_date'].strftime(DATETIME_STRING_FORMAT)}\n"
+                disp_str += f"Due Date: \t {task['due_date'].strftime(DATETIME_STRING_FORMAT)}\n"
+                disp_str += f"Task Description: \n--{task['description']}\n"
+                print(disp_str)
         
         # Call function to edit selected task
-        get_task_input(my_tasks)
-        return my_tasks
+        get_task_input(incomplete_tasks)
+
+        return my_tasks,incomplete_tasks
         
 #====Users choice====
 ''' For selecting individual tasks and editing them'''
-def get_task_input(my_tasks):
+def get_task_input(incomplete_tasks):
     # Task menu for user to select a task and interact with it
     while True:
         choice = input("\nSelect a task number or -1 to go back: ")
@@ -234,8 +259,8 @@ def get_task_input(my_tasks):
             break
         try:
             choice = int(choice) - 1  # Convert to int and adjust for indexing
-            if 0 <= choice < len(my_tasks):
-                selected_task = my_tasks[choice] # Users choice relating to enumerated list
+            if 0 <= choice < len(incomplete_tasks):
+                selected_task = incomplete_tasks[choice] # Users choice relating to enumerated list
                 
                 print("Selected task:\n",selected_task['title'],"\n",selected_task['description'],"\n")
                 
@@ -302,6 +327,7 @@ def update_tasks_file():
 #========== MAIN ==========
 
 task_list = get_tasks()
+
 login()
 
 # presenting the menu to the user and 
