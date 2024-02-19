@@ -39,29 +39,7 @@ def get_tasks():
         curr_t['assigned_date'] = datetime.strptime(task_components[4], DATETIME_STRING_FORMAT)
         curr_t['completed'] = True if task_components[5] == "Yes" else False
         task_list.append(curr_t)
-        
-        #incomplete_tasks(task_list)
-
-
-        
-    #     if curr_t['completed'] == False:
-    #         tasks_not_completed.append(curr_t)
-    #     else:
-    #         pass            
-
-    # print(task_list)
-    # print(tasks_not_completed)
-    return task_list#, tasks_not_completed
-
-# tasks_not_completed = []
-# def incomplete_tasks(t_list):
-#         for item in t_list:
-        
-#             if item['completed'] == False:
-#                 tasks_not_completed.append(item)
-#             else:
-#                 pass
-#         return tasks_not_completed
+    return task_list
 
 
 #====Login Section====
