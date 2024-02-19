@@ -19,7 +19,7 @@ def get_tasks():
 # Create tasks.txt if it doesn't exist
     if not os.path.exists("tasks.txt"):
         with open("tasks.txt", "w") as default_file:
-            pass
+            print("Created tasklist...")
 
     # Open tasks.txt if already exists
     with open("tasks.txt", 'r') as task_file:
@@ -302,60 +302,150 @@ def update_tasks_file():
             task_file.write(task_line + "\n")
     print("Tasks file updated.\n")
 
-#========== MAIN ==========
+#=====Generate Reports====
+'''Create .txt files with statistics based on user and task values'''
+def generate_reports(task_list):
 
-task_list = get_tasks()
+    #====Tasks====
 
-login()
+    # Get todays date
+    todays_date = datetime.now().date()
 
-# presenting the menu to the user and 
-# making sure that the user input is converted to lower case.
-while True:
-    print()
-    print(menu_list)
-    menu = input("Enter Choice: ").lower()
+    # Set task values
+    total = len(task_list)
+    completed_tasks = sum(1 for task in task_list if task['completed'])
+    incomplete_tasks = total - completed_tasks
+    overdue = sum(1 for task in task_list if task['due_date'].date() < todays_date and not task['completed'])
 
-    if menu == 'r':
-        reg_user()
+    # Get percentages
+    if total > 0:  # Avoid dividing by zero
+        percent_incomplete = (incomplete_tasks / total) * 100
+        percent_overdue = (overdue / total) * 100
+    else:
+        percent_incomplete = 0
+        percent_overdue = 0
 
-    elif menu == 'a':
-        add_task()
+    # Task Summary
+    summary = ""
+    summary += "-----Task Overview -----\n"
+    summary += f"\nTotal Number of tasks: \t\t\t{total}\n"
+    summary += f"Total \"Completed\" tasks: \t\t{completed_tasks}\n"
+    summary += f"Total \"Incomplete\" tasks: \t\t{incomplete_tasks}\n"
+    summary += f"Total Incomplete AND overdue: \t{overdue}\n"
+    summary += f"Percentage of tasks incomplete: {percent_incomplete:.2f}%\n"
+    summary += f"Percentage of tasks overdue: \t{percent_overdue:.2f}%\n"
+    
+    # Write task summary to file, create if doesnt exist
+    with open("task_overview.txt", "w") as overview:
+        overview.write(summary)
+
+    #====Users====
+    num_users = len(username_password.keys())
+    users = set(task['username'] for task in task_list) 
+
+    
+    # User Summary
+    user_summary = ""
+    user_summary += "----- User Overview -----\n"
+    user_summary += f"\nTotal Number of users: \t\t{num_users}\n"
+    user_summary += f"Total Number of tasks: \t\t{total}\n"
 
 
-    elif menu == 'va':
-        view_all()
-            
-
-    elif menu == 'vm':
-        view_mine()
-
-    elif menu == 'gr':
-        print("\nWe are working on thisd....\n")
+    for user in users:
+        user_tasks = [task for task in task_list if task['username'] == user]
+        total_user_tasks = len(user_tasks)
+        user_completed = sum([1 for task in task_list if task['username'] == user and task['completed'] == True])
+        user_overdue = sum([1 for task in task_list if task['username'] == user and task['completed'] == False])
+        user_overdue_and_incomplete = sum(1 for task in user_tasks if task['due_date'].date() < todays_date and task['completed'] == False)
+        # Percentages
+        if total > 0:  # Avoid dividing by zero
+            percentage_user_tasks = (len(user_tasks) / total) * 100
+            percent_complete = (user_completed / total_user_tasks) * 100
+            percent_overdue = (user_overdue / len(user_tasks)) * 100 
+            percent_out_and_overdue = (user_overdue_and_incomplete / len(user_tasks) * 100 )
+        else:
+            percent_incomplete = 0
+            percent_overdue = 0
         
-    elif menu == 'ds' and curr_user == 'admin': 
-        '''If the user is an admin they can display statistics about number of users
-            and tasks.'''
-        num_users = len(username_password.keys())
-        num_tasks = len(task_list)
+
+        user_summary += f"\n\nOverview for user: {user.title()}\n"
+        user_summary += f"\nTotal tasks assigned: \t\t{total_user_tasks}\n"
+
+        user_summary += f"\n% of all assigned tasks: \t\t{percentage_user_tasks:.2f}%\n"
+        user_summary += f"% of completed tasks: \t\t\t{percent_complete:.2f}%\n"
+        user_summary += f"% of still to complete: \t\t{percent_overdue:.2f}%\n"
+        user_summary += f"% Overdue and incomplete: \t\t {percent_out_and_overdue:.2f}%"
+    
+
+    # Write user summary similar to above
+    with open("user_overview.txt", "w") as users:
+        users.write(user_summary)
+
+#====Display Statistics====
+''' If the user is an admin they can display statistics about 
+    number of users and tasks.'''
+def display_statistics():
+    if curr_user == 'admin':         
+        # Get task count from tasks.txt
+        with open("tasks.txt", "r") as task_stats:
+            task_count = task_stats.read().split("\n") # split tasks by newlines
+            task_count = sum(1 for t in task_count if t) # Count over 
+
+        # Get user count from user.txt
+        with open("user.txt", "r") as user_stats:
+            user_count = user_stats.read().split("\n")
+            user_count = sum(1 for user in user_count if user)
 
         print("-----------------------------------")
-        print(f"Number of users: \t\t {num_users}")
-        print(f"Number of tasks: \t\t {num_tasks}")
+        print(f"Number of users: \t\t {user_count}")
+        print(f"Number of tasks: \t\t {task_count}")
         print("-----------------------------------")    
-    
-    elif menu == 'ds' and curr_user != 'admin': 
-        '''If the user is an admin they can display statistics about number of users
-            and tasks.'''
-        
 
+    elif curr_user != 'admin': # If not admin
+      
         print("-----------------------------------")
         print(f"You do not have permission to access \"Display Statistics\"")
-        print("-----------------------------------")    
-    
+        print("-----------------------------------")   
 
-    elif menu == 'e':
-        print('Goodbye!!!')
-        exit()
+#====Menu====
+def menu():
+    # presenting the menu to the user and 
+    # making sure that the user input is converted to lower case.
+    while True:
+        print()
+        print(menu_list)
+        menu = input("Enter Choice: ").lower()
 
-    else:
-        print("You have made a wrong choice, Please Try again")
+        if menu == 'r':
+            reg_user()
+
+        elif menu == 'a':
+            add_task()
+
+        elif menu == 'va':
+            view_all()
+                
+        elif menu == 'vm':
+            view_mine()
+
+        elif menu == 'gr':
+            generate_reports(task_list)
+
+        elif menu == 'ds' :
+            display_statistics()
+
+        elif menu == 'e':
+            print('Goodbye!!!')
+            exit()
+
+        else:
+            print("You have made a wrong choice, Please Try again")
+
+
+#========== MAIN ==========
+task_list = get_tasks()
+login()
+menu()
+
+
+

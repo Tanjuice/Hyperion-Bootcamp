@@ -1,6 +1,0 @@
-Sam;Induction;Attend induction;2024-02-19;2024-02-17;Yes
-admin;Display Statistics;Add display_statistics() functionality;2024-03-14;2024-02-17;No
-Sam;More tasks;Now........;2024-02-18;2024-02-17;Yes
-Sam;Another Task;We need more tasks!;2024-02-19;2024-02-18;Yes
-Sam;Task 1;Tasking;2025-01-01;2024-02-18;No
-Sam;Task 2;Tasking mo;2025-01-01;2024-02-18;No
