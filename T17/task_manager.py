@@ -21,10 +21,14 @@ def get_tasks():
         with open("tasks.txt", "w") as default_file:
             print("Created tasklist...")
 
-    # Open tasks.txt if already exists
-    with open("tasks.txt", 'r') as task_file:
-        task_data = task_file.read().split("\n")
-        task_data = [t for t in task_data if t != ""]
+        with open("tasks.txt", 'r') as task_file:
+            task_data = task_file.read().split("\n")
+            task_data = [t for t in task_data if t != ""]
+
+    else:    # Open tasks.txt if already exists
+        with open("tasks.txt", 'r') as task_file:
+            task_data = task_file.read().split("\n")
+            task_data = [t for t in task_data if t != ""]
 
     # Define task_list as an empty list
     task_list = []
@@ -48,11 +52,14 @@ def get_tasks():
 def login():
     global username_password
     global curr_user
-
+    user_data = []
     # If no user.txt file, write one with a default account
     if not os.path.exists("user.txt"):
         with open("user.txt", "w") as default_file:
             default_file.write("admin;password")
+
+        with open("user.txt", 'r') as user_file:
+            user_data = user_file.read().split("\n")
     else:
     # Read in user_data
         with open("user.txt", 'r') as user_file:
@@ -67,17 +74,17 @@ def login():
     logged_in = False
     while not logged_in:
         
-        print("LOGIN")
+        print("========== TASK MANAGER ==========\n\n----- LOGIN -----\n")
         curr_user = input("Username: ")
         curr_pass = input("Password: ")
         if curr_user not in username_password.keys():
             print("User does not exist")
             continue
         elif username_password[curr_user] != curr_pass:
-            print("Wrong password")
+            print("\nWrong password")
             continue
         else:
-            print("Login Successful!")
+            print("\nLogin Successful!")
             logged_in = True
             return logged_in, username_password
 
@@ -232,7 +239,7 @@ def view_mine():
 def get_task_input(incomplete_tasks):
     # Task menu for user to select a task and interact with it
     while True:
-        choice = input("\nSelect a task number or -1 to go back: ")
+        choice = input("Select a task number or -1 to go back: ")
         if choice == "-1":
             break
         try:
@@ -248,6 +255,7 @@ def get_task_input(incomplete_tasks):
                     selected_task['completed'] = True
                     print(f"\nTask set to: {selected_task['completed']}\n")
                     update_tasks_file()
+                    view_mine()
                     break
                 elif selection == "no":
                     selection = input("Ok, would you like to edit the task? (yes/no): ").lower()
@@ -289,8 +297,12 @@ def edit_task(task):
                 # Update task file and print confirmation
             update_tasks_file()
             print("Task updated successfully.\n")
+            
+            
         except ValueError:
             print("Invalid date format. No changes made to due date.")
+
+
 
 #====Update Task File====
 ''' Rewrite task.txt with updated/new task''' 
@@ -327,7 +339,7 @@ def generate_reports(task_list):
 
     # Task Summary
     summary = ""
-    summary += "-----Task Overview -----\n"
+    summary += "----- Task Overview -----\n"
     summary += f"\nTotal Number of tasks: \t\t\t{total}\n"
     summary += f"Total \"Completed\" tasks: \t\t{completed_tasks}\n"
     summary += f"Total \"Incomplete\" tasks: \t\t{incomplete_tasks}\n"
@@ -374,7 +386,7 @@ def generate_reports(task_list):
         user_summary += f"\n% of all assigned tasks: \t\t{percentage_user_tasks:.2f}%\n"
         user_summary += f"% of completed tasks: \t\t\t{percent_complete:.2f}%\n"
         user_summary += f"% of still to complete: \t\t{percent_overdue:.2f}%\n"
-        user_summary += f"% Overdue and incomplete: \t\t {percent_out_and_overdue:.2f}%"
+        user_summary += f"% Overdue and incomplete: \t\t{percent_out_and_overdue:.2f}%"
     
 
     # Write user summary similar to above
@@ -414,7 +426,7 @@ def menu():
     while True:
         print()
         print(menu_list)
-        menu = input("Enter Choice: ").lower()
+        menu = input("\nEnter Choice: ").lower()
 
         if menu == 'r':
             reg_user()
