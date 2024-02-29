@@ -454,10 +454,16 @@ def menu():
             print("You have made a wrong choice, Please Try again")
 
 
+
 #========== MAIN ==========
-task_list = get_tasks()
-login()
-menu()
+
+def main():
+    global task_list
+    task_list = get_tasks()
+    login()
+    menu()
 
 
 
+if __name__ == "__main__":
+    main()
